@@ -1,0 +1,141 @@
+﻿@model Zadanko.Models.RegistrationFormViewModel
+@using Zadanko.HtmlHelpers
+@{
+    ViewBag.Title = "RegisterForm";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <section id="register-form">
+            @ViewBag.Message
+            <h4>Formularz zgłoszeniowy</h4>
+            @using (Html.BeginForm("RegisterForm", "Registration", FormMethod.Post, new { @id = "data-form", @enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken();
+            <div class="row">
+                @Html.LabelFor(m => m.FName, new { @class = "col-md-1 control-label" })
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.FName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.FName, null, new { @class = "text-danger"})
+                </div>
+                @Html.LabelFor(m => m.LName, new { @class = "col-md-1 control-label" })
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.LName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.LName, null, new { @class = "text-danger"})
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                @Html.LabelFor(m => m.Email, new { @class = "col-md-1 control-label" })
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger"})
+                </div>
+                @Html.LabelFor(m => m.Password, new { @class = "col-md-1 control-label" })
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger"})
+                </div>
+                @Html.LabelFor(m => m.PasswordRepeat, new { @class = "col-md-1 control-label" })
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.PasswordRepeat, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.PasswordRepeat, null, new { @class = "text-danger"})
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                @Html.LabelFor(m => m.Interests, new { @class = "col-md-1 control-label" })
+                <br />
+                <div class="col-md-3">
+                    @Html.MultiSelectBoxFor(m => m.Interests)
+                </div>
+            </div>
+            <div class="row">
+                @Html.LabelFor(m => m.AdditionalInterestsWill, new { @class = "col-md-2" })
+                <div class="col-md-1">
+                    @Html.CheckBoxFor(m => m.AdditionalInterestsWill, new { @class = "checkbox" })
+                </div>
+                <div class="col-md-2 hidden-item hidden">
+                    <table class="additional-interest">
+                        <tr>
+                            <td><input type="text" id="inter[0]" name="interest[0]" value="" /></td>
+                        </tr>
+                    </table>
+                    
+                        <input type="button" class="addInterest" value="Dodaj zainteresowanie" />
+                    
+                </div>
+                
+                @Html.LabelFor(m => m.Receipt, new { @class = "col-md-1" })
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.Receipt, new { @type = "file", @id = "fileupload", @value = "Dodaj Plik" })
+                    @Html.ValidationMessageFor(m => m.Receipt, null, new { @class = "text-danger"})
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <input type="submit" value="Wyślij" class="btn-primary" />
+                </div>
+            </div>
+            }
+        </section>
+    </div>
+</div>
+
+@section ScriptsBottom{
+
+    <script>
+        $(document).ready(function () {
+            var x = 1;
+            $(".addInterest").on("click", function (e) {
+                e.preventDefault();
+                var newItem = $(".additional-interest tr:first").clone();
+                newItem.find("#inter[0]").each(function () {
+                    $(this).attr('id', 'inter[' + x + ']');
+                    $(this).attr('name', 'interest[' + x + ']');
+                });
+                x++;
+                newItem.find("input:text").val('');
+
+               
+                newItem.appendTo($(".additional-interest"));
+                
+            })
+
+            $(".checkbox").on("click" ,function () {
+                var div = $(".hidden-item");
+                if($(this).is(":checked"))
+                {
+                    div.removeClass("hidden");
+                    div.slideDown(300);
+                } else {
+                    div.addClass("hidden");
+                    div.slideUp(300);
+                }
+            })
+
+            $(".data-form").submit(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: new FormData(this),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        console.log(data.UploadedFileCount + 'plik uploadowano poprawnie');
+                    },
+                    error: function (xhr, error, status) {
+                        console.log(error, status);
+                    }
+                });
+            });
+        });
+
+    </script>
+
+
+}

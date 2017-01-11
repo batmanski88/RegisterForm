@@ -1,0 +1,6 @@
+﻿@model Zadanko.Models.RegistrationFormViewModel
+
+@for(int i = 0; i < Model.AdditionalInterests.Count; i++)
+{
+    @Html.EditorFor(model => @Model.AdditionalInterests[i])
+}
