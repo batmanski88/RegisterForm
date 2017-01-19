@@ -73,15 +73,6 @@ namespace Zadanko.Controllers
             }
         }
 
-        private string CheckFileSize(byte[] file)
-        {
-            int maxFileSize = 2;
-
-            if(file.Length > maxFileSize * 1024)
-            
-              return  ViewBag.File = "Rozmiar pliku jest za duży!";
-
-            return null;
-        }
+       
     }
 }
