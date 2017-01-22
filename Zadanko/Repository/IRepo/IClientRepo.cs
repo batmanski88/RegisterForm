@@ -9,7 +9,7 @@ namespace Zadanko.Repository.IRepo
 {
     public interface IClientRepo
     {
-        void RegisterClient(Client client);
+        void RegisterClient(RegistrationFormViewModel model, string[] interest);
         void SaveChanges();
     }
 }
