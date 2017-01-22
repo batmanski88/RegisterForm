@@ -26,7 +26,7 @@ namespace Zadanko.Controllers
         public ActionResult RegisterForm()
         {
             var model = new RegistrationFormViewModel();
-            model.AdditionalInterests = new List<string>();
+          
             return View(model);
         }
 
@@ -38,29 +38,9 @@ namespace Zadanko.Controllers
 
             if (ModelState.IsValid)
             {
-                var Client = new Client()
-                {
-                    FName = model.FName,
-                    LName = model.LName,
-                    Email = model.Email,
-                    Password = model.Password,
-                    Interests = string.Join(",", model.Interests.Select(s => s.ToString())),
-                    Receipt = model.Receipt
+              
 
-                };
-
-                for (int i = 0; i < interest.Length; i++)
-                {
-                    AdditionalInterest inter = new AdditionalInterest();
-                    if (interest[i] != null)
-                    {
-                        inter.Interest = interest[i];
-                    }
-
-                    Client.AdditionalInterests.Add(inter);
-                }
-
-                _repo.RegisterClient(Client);
+                _repo.RegisterClient(model, interest);
                 _repo.SaveChanges();
 
                 ModelState.Clear();
